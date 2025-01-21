@@ -1,0 +1,39 @@
+.Button {
+    color: var(--ligth-lighter);
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: .2s;
+}
+.clear {
+    padding: 0;
+    border-radius: 0;
+}
+.primary {
+    background: var(--el-blue-d);
+
+    &:hover {
+        background: var(--el-blue-l);
+    }
+}
+
+.success {
+    background: var(--el-green-d);
+
+    &:hover {
+        background: var(--el-green);
+    }
+}
+
+.disable {
+    background: var(--dark-lighter);
+    &:hover {
+        background: var(--dark-lighter);
+    }
+}
