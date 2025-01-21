@@ -1,12 +1,13 @@
 import {MapBox} from "widgets/MapBox";
-import {FeatureCard} from "shared/ui/FeatureCard/FeatureCard.tsx";
+import {useState} from "react";
+import {Layer} from "leaflet";
+
 
 export const HomePage = () => {
-
+    const [features, setFeatures] = useState<Layer[]>([])
     return (
         <div className='container_page'>
-            <MapBox />
-            <FeatureCard name={"Полигон"} coordinates={[[123,133], [124, 53], [234, 414.21]]}/>
+            <MapBox features={features} setFeatures={setFeatures} />
         </div>
     );
 };

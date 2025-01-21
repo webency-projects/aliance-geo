@@ -6,42 +6,45 @@ import {Button} from "shared/ui/Button/Button.tsx";
 
 interface FeatureCardProps {
     className?: string;
-    type?: 'rectangle' | 'polygon';
-    name: string;
-    coordinates: [number, number][];
+    feature: any;
     onSave: () => void;
 }
 
-export const FeatureCard = memo((props: FeatureCardProps) => {
+export const FeatureCard = (props: FeatureCardProps) => {
     const {
         className,
-        type = 'polygon',
-        coordinates,
-        name,
+        feature,
         onSave
     } = props;
+    console.log(feature)
+    const geoJsonFeature = feature.toGeoJSON();
+    const {coordinates} = geoJsonFeature.geometry;
+    const title = geoJsonFeature.properties.title;
+
     return (
         <div className={classNames(cls.FeatureCard, {}, [className])}>
-            <h2>{name}</h2>
-            {type === 'polygon' && (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Ширина</th>
-                        <th>Долгота</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {coordinates.map((point, i) => (
-                        <tr key={i}>
-                            <td>{point[0]}</td>
-                            <td>{point[1]}</td>
+            <h2>{title}</h2>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Ширина</th>
+                    <th>Долгота</th>
+                </tr>
+                </thead>
+                <tbody>
+                {coordinates.map((line) => (
+                    line.map((point, index) => (
+                        <tr key={index}>
+                            <td>{point[0].toFixed(5)}</td>
+                            <td>{point[1].toFixed(5)}</td>
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
-            )}
+                    ))
+                ))}
+                </tbody>
+            </table>
+
             <Button onClick={onSave}>Сохранить</Button>
         </div>
     );
-});
+};
