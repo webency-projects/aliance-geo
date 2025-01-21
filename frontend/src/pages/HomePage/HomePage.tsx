@@ -1,4 +1,4 @@
-import {MapBox} from "widgets/MapBox/ui/MapBox.tsx";
+import {MapBox} from "widgets/MapBox";
 
 export const HomePage = () => {
 
