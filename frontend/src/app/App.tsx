@@ -1,13 +1,13 @@
+import {HomePage} from "pages/HomePage/HomePage.tsx";
 
-import "./styles/index.scss"
 
 function App() {
-    
-  return (
-    <>
-      GEO
-    </>
-  )
+
+    return (
+        <>
+            <HomePage/>
+        </>
+    )
 }
 
 export default App
