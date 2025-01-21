@@ -1,0 +1,19 @@
+.Input {
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--dark-darker);
+    background: none;
+    border: 1px solid var(--dark-lighter);
+    padding: .5rem .75rem;
+    transition: .2s;
+    appearance: none;
+    border-radius: 4px;
+    width: 100%;
+    &:hover {
+        border-color: var(--dark-base);
+    }
+    &:focus {
+        outline: 0 none;
+        outline-offset: 0;
+    }
+}
