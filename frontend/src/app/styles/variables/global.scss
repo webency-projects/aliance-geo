@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+
+:root {
+    --font-size-base: 14px;
+    --border-radius: 12px;
+    --font-family-base: "Montserrat", sans-serif;
+
+    // dark and light color
+    --ligth-base: #f2f2f5;
+    --ligth-lighter: #fafafc;
+    --ligth-darker: #ebebf0;
+
+    --dark-base: #555770;
+    --dark-lighter: #8f90a6;
+    --dark-darker: #28293d;
+
+    // elements blue
+    --el-blue: #3e7bfa;
+    --el-blue-l: #6698ff;
+    --el-blue-d: #3568d4;
+
+    // elements green
+    --el-green: #39d98a;
+    --el-green-l: #57eba1;
+    --el-green-d: #08ad64;
+
+    // elements red
+    --el-red: #ff5c5c;
+    --el-red-l: #ff8080;
+    --el-red-d: #ff3b3b;
+
+    // z-index
+    --modal-z-index: 10;
+}
+
+html {
+    height: 100%;
+    font-size: var(--font-size-base);
+    background-color: var(--ligth-base);
+}
+
+body {
+    font-family: var(--font-family-base), serif;
+    color: var(--dark-darker);
+    background-color: var(--ligth-base);
+    min-height: 100%;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
