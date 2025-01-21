@@ -1,0 +1,29 @@
+name: alliance-geo
+
+services:
+  geo_db:
+    container_name: geo_db
+    image: postgis/postgis
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=geo_db
+    ports:
+      - "6666:5432"
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres' ]
+      interval: 1s
+      retries: 100
+    volumes:
+      - geo_db-data:/var/lib/postgresql/data
+    networks:
+      - geo-network
+
+
+volumes:
+  geo_db-data:
+
+networks:
+  geo-network:
+    driver: bridge
