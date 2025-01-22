@@ -1,8 +1,23 @@
 name: alliance-geo
 
 services:
-  geo_db:
-    container_name: geo_db
+  geo_backend_api:
+    container_name: geo_backend_api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      geo_postgres_db:
+        condition: service_healthy
+    networks:
+      - geo-network
+
+  geo_postgres_db:
+    container_name: geo_postgres_db
     image: postgis/postgis
     restart: always
     environment:
