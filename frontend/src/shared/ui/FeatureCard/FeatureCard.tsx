@@ -16,7 +16,6 @@ export const FeatureCard = (props: FeatureCardProps) => {
         feature,
         onSave
     } = props;
-    console.log(feature)
     const geoJsonFeature = feature.toGeoJSON();
     const {coordinates} = geoJsonFeature.geometry;
     const title = geoJsonFeature.properties.title;
