@@ -35,7 +35,7 @@ export const Sidebar = memo((props: SidebarProps) => {
                 </TabPanel>
                 <TabPanel>
                     {Object.keys(data).length && data?.features.map(f => (
-                        <Table feature={f} headers={["Широта", "Долгота"]}/>
+                        <Table key={f.id} feature={f} headers={["Широта", "Долгота"]}/>
                     ))}
                 </TabPanel>
                 <TabPanel>

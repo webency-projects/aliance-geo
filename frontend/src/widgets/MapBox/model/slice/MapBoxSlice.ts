@@ -10,6 +10,8 @@ const initialState: MapBoxSchema = {
     error: undefined,
     data: {} as FeatureCollection,
     feature: undefined,
+    searchData: [],
+    center: [-6.165132, 106.377869]
 }
 
 
@@ -25,6 +27,9 @@ export const MapBoxSlice = createSlice({
                 ...state.feature,
                 properties: action.payload,
             };
+        },
+        setCenter: (state, action) => {
+            state.center = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -36,6 +41,13 @@ export const MapBoxSlice = createSlice({
             .addCase(fetchMapData.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
+                state.searchData = action.payload.features.reduce((acc, curr) => {
+                    const obj = {
+                        name: curr.properties.name,
+                        coords: curr.geometry.coordinates.flat()[0]
+                    }
+                    return [...acc, obj];
+                },[])
             })
             .addCase(fetchMapData.rejected, (state, action) => {
                 state.isLoading = false

@@ -1,0 +1,23 @@
+.SearchBar {
+    position: fixed;
+    top: 10px;
+    left: 50px;
+    z-index: 1000;
+    background: var(--ligth-darker);
+    width: 300px;
+
+    select {
+        appearance: none;
+        border: 0;
+        outline: 0;
+        min-width: 280px;
+        cursor: pointer;
+        border-radius: 0.25em;
+        option {
+            font-size: 1rem;
+            color: inherit;
+            background-color: var(--ligth-darker);
+        }
+    }
+
+}
