@@ -6,4 +6,4 @@ class PolygonSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = PolygonModel
         geo_field = 'polygon'
-        fields = '__all__'
+        fields = ('id', 'name', 'polygon')

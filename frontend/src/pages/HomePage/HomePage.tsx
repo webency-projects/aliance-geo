@@ -1,13 +1,12 @@
 import {MapBox} from "widgets/MapBox";
-import {useState} from "react";
-import {Layer} from "leaflet";
+import {Sidebar} from "widgets/Sidebar";
 
 
 export const HomePage = () => {
-    const [features, setFeatures] = useState<Layer[]>([])
     return (
         <div className='container_page'>
-            <MapBox features={features} setFeatures={setFeatures} />
+            <MapBox />
+            <Sidebar/>
         </div>
     );
 };

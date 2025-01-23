@@ -1,12 +1,12 @@
 import {classNames} from "shared/lib/classNames/classNames";
 
 import cls from './FeatureCard.module.scss';
-import {memo} from "react";
 import {Button} from "shared/ui/Button/Button.tsx";
+import {Feature, Polygon} from "geojson";
 
 interface FeatureCardProps {
     className?: string;
-    feature: any;
+    feature: Feature<Polygon>;
     onSave: () => void;
 }
 
@@ -16,10 +16,15 @@ export const FeatureCard = (props: FeatureCardProps) => {
         feature,
         onSave
     } = props;
-    const geoJsonFeature = feature.toGeoJSON();
-    const {coordinates} = geoJsonFeature.geometry;
-    const title = geoJsonFeature.properties.title;
-
+    if (!feature) {
+        return (
+            <div className={classNames(cls.FeatureCard, {}, [className])}>
+                <h2>Нет данных</h2>
+            </div>
+        );
+    }
+    const title = feature.properties?.name || "";
+    const {coordinates} = feature.geometry;
     return (
         <div className={classNames(cls.FeatureCard, {}, [className])}>
             <h2>{title}</h2>
@@ -27,7 +32,7 @@ export const FeatureCard = (props: FeatureCardProps) => {
             <table>
                 <thead>
                 <tr>
-                    <th>Ширина</th>
+                    <th>Широта</th>
                     <th>Долгота</th>
                 </tr>
                 </thead>
