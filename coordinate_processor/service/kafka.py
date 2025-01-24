@@ -1,11 +1,12 @@
 from config import settings
-from handler import process_message
+from .handler import process_message
 from confluent_kafka import Producer, Consumer, KafkaError
 import json
 
 
 def kafka_producer():
     conf = {"bootstrap.servers": settings.KAFKA_BROKER_URL}
+    print(conf)
     producer = Producer(**conf)
     return producer
 
@@ -16,8 +17,9 @@ def kafka_consumer():
         'group.id': "coordinate_processor",
         'auto.offset.reset': 'earliest'
     }
+    print(conf)
     consumer = Consumer(**conf)
-    consumer.subscribe([settings.INPUT_COORDINATES])
+    consumer.subscribe([settings.TO_PROCESS_TOPIC])
     return consumer
 
 
@@ -36,8 +38,8 @@ def consume_messages():
                     print(msg.error())
                     break
 
-            response = process_message(msg)
-            producer.produce(settings.OUTPUT_COORDINATES, key=msg.key(), value=json.dumps(response))
+            response = process_message(msg.value())
+            producer.produce(settings.FROM_PROCESS_TOPIC, key=msg.key(), value=json.dumps(response))
             print(f"Обработано сообщение: {msg.value()}, отправлен ответ: {response}")
     finally:
         consumer.close()

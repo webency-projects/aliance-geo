@@ -16,12 +16,10 @@ def adjust_coordinates(coordinates: List[List[float]]):
 
 
 def process_message(msg):
-    data = json.loads(msg.value())
-
-    coordinates = data.get("coordinates", [])
-    adjusted_coords, crosses_antimeridian = adjust_coordinates(coordinates)
-    response = {
-        "adjusted_coordinates": adjusted_coords,
-        "crosses_antimeridian": crosses_antimeridian
-    }
-    return response
+    data = json.loads(msg)
+    geometry = data.get("geometry")
+    coordinates = geometry['coordinates'][0]
+    coords, antimeridian = adjust_coordinates(coordinates)
+    data['properties']['antimeridian'] = antimeridian
+    data['geometry']['coordinates'] = [coords]
+    return data

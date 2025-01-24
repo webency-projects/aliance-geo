@@ -11,7 +11,7 @@ const initialState: MapBoxSchema = {
     data: {} as FeatureCollection,
     feature: undefined,
     searchData: [],
-    center: [-6.165132, 106.377869]
+    center: [0, 0]
 }
 
 
