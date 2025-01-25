@@ -22,6 +22,7 @@ export const MapBox = (props: MapBoxProps) => {
     const {className} = props;
     const dispatch = useDispatch();
     const mapRef = useRef(null);
+    const center = useSelector(getMapCenter) || [0, 0]
 
     const geoJsonData = useSelector(getMapData)
     const intersectionData = useSelector(getIntersectionData)
@@ -53,9 +54,10 @@ export const MapBox = (props: MapBoxProps) => {
     return (
         <div className={classNames(cls.MapBox, {}, [className])}>
             <MapContainer
-                center={[-6.165132, 106.377869]}
+                center={center}
                 zoom={8}
                 style={{height: '100%', width: '100%'}}
+                bounds={center}
                 ref={mapRef}
             >
                 <TileLayer
@@ -101,7 +103,7 @@ const MapController = () => {
     const map = useMap();
     const center = useSelector(getMapCenter)
     useEffect(() => {
-        map.setView(center, 8);
+        map.setView(center, 6);
     }, [center, map]);
     return null;
 }

@@ -1,4 +1,5 @@
 import {Feature, FeatureCollection, Polygon} from "geojson";
+import {LatLngBoundsLiteral} from "leaflet";
 
 type searchData = {
     name: string,
@@ -12,5 +13,5 @@ export interface MapBoxSchema {
     error?: string | undefined;
     feature?: Feature<Polygon>;
     searchData?: searchData[];
-    center: [number, number];
+    center: LatLngBoundsLiteral;
 }

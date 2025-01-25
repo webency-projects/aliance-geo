@@ -50,29 +50,3 @@ export const SearchBar = (props: SearchBarProps) => {
         </div>
     );
 };
-//
-// export const SearchBar = (props: SearchBarProps) => {
-//     const {className = ""} = props;
-//     const [value, setValue] = useState('');
-//     const [results, setResults] = useState([]);
-//     const searchData = useSelector(getSearchData);
-//     useEffect(() => {
-//         if (searchData?.length) {
-//             const d = searchData.filter(item => item.name.indexOf(value) !== -1);
-//             setResults(d)
-//         }
-//     }, [value, searchData]);
-//
-//     return (
-//         <div className={classNames(cls.SearchBar, {}, [className])}>
-//             <Input value={value} onChange={setValue}/>
-//             <select>
-//                 {results.length > 0 && value.length > 0 && (
-//                     results.map((item) => (
-//                         <option key={item.name} value={item.name}>{item.name}</option>
-//                     ))
-//                 )}
-//             </select>
-//         </div>
-//     );
-// };

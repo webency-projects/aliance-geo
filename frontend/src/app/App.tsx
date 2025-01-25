@@ -1,11 +1,15 @@
 import {HomePage} from "pages/HomePage/HomePage.tsx";
+import {ErrorBoundary} from "shared/ui/ErrorBoundary/ErrorBoudary.tsx";
+import {ErrorPage} from "pages/ErrorPage/ErrorPage.tsx";
 
 
 function App() {
 
     return (
         <>
-            <HomePage/>
+            <ErrorBoundary fallback={ErrorPage}>
+                <HomePage/>
+            </ErrorBoundary>
         </>
     )
 }
