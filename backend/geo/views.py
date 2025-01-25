@@ -1,10 +1,12 @@
 from rest_framework import viewsets, status
+
 from rest_framework.response import Response
 from .models import PolygonModel
 from .serializers import PolygonSerializer
 from django.contrib.gis.geos import GEOSGeometry
 from .kafka import send_message
 import json
+
 
 
 class PolygonViewSet(viewsets.ModelViewSet):
@@ -24,11 +26,7 @@ class PolygonViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": "Geometry is required."}, status=status.HTTP_400_BAD_REQUEST)
         send_message(request.data)
-        serializer = self.get_serializer(data={
-            "name": properties['name'],
-            "polygon": polygon
-        })
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=201)
+
+        return Response({"success": True}, status=201)
+
 

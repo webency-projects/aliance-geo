@@ -7,11 +7,11 @@ def adjust_coordinates(coordinates: List[List[float]]):
     crosses_antimeridian = False
 
     for coord in coordinates:
-        longitude = coord[1]
+        longitude = coord[0]
         if longitude > 180:
             longitude -= 360
             crosses_antimeridian = True
-        adjusted_coords.append([coord[0], longitude])
+        adjusted_coords.append([longitude, coord[1]])
     return adjusted_coords, crosses_antimeridian
 
 

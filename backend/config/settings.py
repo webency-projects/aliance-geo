@@ -5,6 +5,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 KAFKA_BROKER_URL = os.environ.get('KAFKA_BOOTSTRAP_SERVERS')
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 
 SECRET_KEY = 'django-insecure-1q-leu9kj+4m)bnu2l+*-b)a6pjsei92fr!ti9l*%bq2sxt6)m'
 

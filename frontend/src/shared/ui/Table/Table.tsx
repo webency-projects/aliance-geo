@@ -1,5 +1,5 @@
 import {classNames} from "shared/lib/classNames/classNames";
-
+import { FaGlobeAmericas } from "react-icons/fa";
 import cls from './Table.module.scss';
 import {Feature, Polygon} from "geojson";
 import {Button, ButtonTheme} from "shared/ui/Button/Button.tsx";
@@ -16,11 +16,17 @@ export const Table = (props: TableProps) => {
     const {className, feature, headers} = props;
     const [isActive, setIsActive] = useState(false)
     const title = feature.properties?.name || "";
+    const is_antimeridian = feature.properties.antimeridian;
     const coordinates = feature.geometry.coordinates.flat() || [];
     return (
         <div className={classNames(cls.Table, {}, [className])}>
             <div className={cls.Polygon}>
-                <h2>{title}</h2>
+                <div className={cls.title}>
+                    <FaGlobeAmericas
+                        color={is_antimeridian ? "#ff8080" : "#08ad64"}
+                        title={is_antimeridian ? "Пересекает антимередиан" : "Не пересекает антимередиан"}/>
+                    <h2>{title}</h2>
+                </div>
                 <Button theme={ButtonTheme.CLEAR} onClick={() => setIsActive(p => !p)}>
                     {isActive ? (
                         <IoEyeOff style={{color: "grey"}} size={25}/>

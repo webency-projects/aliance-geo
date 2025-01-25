@@ -3,6 +3,9 @@ from confluent_kafka.admin import AdminClient, NewTopic, NewPartitions
 from config import settings
 import json
 import logging
+from .serializers import PolygonSerializer
+from django.contrib.gis.geos import GEOSGeometry
+
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +64,23 @@ def consume_messages():
                     break
 
             message = json.loads(msg.value().decode('utf-8'))
-            logger.info(message)
-
+            save_to_db(message)
     finally:
         consumer.close()
+
+
+def save_to_db(message):
+    geometry = message['geometry']
+    properties = message['properties']
+    polygon = GEOSGeometry(json.dumps(geometry))
+    data = {
+        "name": properties["name"],
+        "polygon": polygon,
+        "antimeridian": properties['antimeridian']
+    }
+    serializer = PolygonSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        print(f"Saved message")
+    else:
+        print(f"Error saving message: {serializer.errors}")
