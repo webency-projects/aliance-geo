@@ -1,4 +1,4 @@
-import {Feature, FeatureCollection} from "geojson";
+import {Feature, FeatureCollection, Polygon} from "geojson";
 
 type searchData = {
     name: string,
@@ -6,10 +6,11 @@ type searchData = {
 }
 
 export interface MapBoxSchema {
-    data: FeatureCollection
-    isLoading: boolean
-    error?: string | undefined
-    feature?: Feature
-    searchData?: searchData[]
-    center: [number, number]
+    data: FeatureCollection;
+    intersections: FeatureCollection;
+    isLoading: boolean;
+    error?: string | undefined;
+    feature?: Feature<Polygon>;
+    searchData?: searchData[];
+    center: [number, number];
 }

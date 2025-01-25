@@ -8,9 +8,10 @@ import {FigureModal} from "features/AddFigureName";
 
 
 import {useDispatch, useSelector} from "react-redux";
-import {getMapCenter, getMapData} from "../model/selectors/MapDataSelectors.ts";
+import {getIntersectionData, getMapCenter, getMapData} from "../model/selectors/MapDataSelectors.ts";
 import {fetchMapData} from "widgets/MapBox/model/services/fetchMapData.ts";
 import {mapActions} from "widgets/MapBox/model/slice/MapBoxSlice.ts";
+import {fetchIntersectionData} from "widgets/MapBox/model/services/fetchIntersectionData.ts";
 
 
 interface MapBoxProps {
@@ -21,13 +22,16 @@ export const MapBox = (props: MapBoxProps) => {
     const {className} = props;
     const dispatch = useDispatch();
     const mapRef = useRef(null);
+
     const geoJsonData = useSelector(getMapData)
+    const intersectionData = useSelector(getIntersectionData)
 
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
     const [currentLayer, setCurrentLayer] = useState<Layer | null>(null)
 
     useEffect(() => {
         dispatch(fetchMapData())
+        dispatch(fetchIntersectionData())
     }, [dispatch]);
 
 
@@ -78,6 +82,12 @@ export const MapBox = (props: MapBoxProps) => {
                             layer.bindPopup(feature.properties.name);
                         }
                         }}/>
+                    }
+                    {Object.keys(intersectionData).length && <GeoJSON data={intersectionData} style={{color: "red"}} onEachFeature={(feature, layer) => {
+                        if (feature.properties && feature.properties.intersected_polygon_name) {
+                            layer.bindPopup(feature.properties.intersected_polygon_name);
+                        }
+                    }}/>
                     }
                 </FeatureGroup>
                 <MapController />
