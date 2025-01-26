@@ -1,7 +1,7 @@
 import {classNames} from "shared/lib/classNames/classNames";
-import {FeatureGroup, GeoJSON, MapContainer, TileLayer, useMap} from "react-leaflet";
+import {FeatureGroup, GeoJSON, MapContainer, TileLayer} from "react-leaflet";
 import {EditControl} from "react-leaflet-draw"
-import {DrawEvents, Layer} from "leaflet";
+import L, {DrawEvents, LatLngTuple, Layer, type Map} from "leaflet";
 import cls from './MapBox.module.scss';
 import {useEffect, useRef, useState} from "react";
 import {FigureModal} from "features/AddFigureName";
@@ -18,11 +18,12 @@ interface MapBoxProps {
     className?: string;
 }
 
+
 export const MapBox = (props: MapBoxProps) => {
     const {className} = props;
     const dispatch = useDispatch();
-    const mapRef = useRef(null);
-    const center = useSelector(getMapCenter) || [0, 0]
+    const mapRef = useRef<Map | null>(null);
+    const center = useSelector(getMapCenter)
 
     const geoJsonData = useSelector(getMapData)
     const intersectionData = useSelector(getIntersectionData)
@@ -31,9 +32,20 @@ export const MapBox = (props: MapBoxProps) => {
     const [currentLayer, setCurrentLayer] = useState<Layer | null>(null)
 
     useEffect(() => {
+        // @ts-ignore
         dispatch(fetchMapData())
+        // @ts-ignore
         dispatch(fetchIntersectionData())
     }, [dispatch]);
+
+    useEffect(() => {
+        const map = mapRef?.current;
+        if (map && center && center?.length > 0) {
+            const coords = center.map((coord) => [coord[1], coord[0]]) as LatLngTuple[];
+            const bounds = L.latLngBounds(coords)
+            map.fitBounds(bounds)
+        }
+    }, [center]);
 
 
     const onCreated = async (e: DrawEvents.Created) => {
@@ -43,6 +55,19 @@ export const MapBox = (props: MapBoxProps) => {
             dispatch(mapActions.setCurrentFeature(layer.toGeoJSON()))
             setIsOpenModal(true)
         }
+    }
+    const onEdited = (e: DrawEvents.Edited) => {
+        const {layers} = e;
+        layers.eachLayer(layer => {
+            setCurrentLayer(layer)
+            // @ts-ignore
+            dispatch(mapActions.editCurrentFeature(layer.toGeoJSON()))
+        })
+
+    }
+    const onDeleted = () => {
+        setCurrentLayer(null)
+        dispatch(mapActions.deleteCurrentFeature())
     }
     const addName = (value: string) => {
         if (!currentLayer) return
@@ -54,10 +79,9 @@ export const MapBox = (props: MapBoxProps) => {
     return (
         <div className={classNames(cls.MapBox, {}, [className])}>
             <MapContainer
-                center={center}
-                zoom={8}
-                style={{height: '100%', width: '100%'}}
-                bounds={center}
+                center={[22.85720, 47.63672]}
+                zoom={13}
+                style={{height: '100vh', width: '100%'}}
                 ref={mapRef}
             >
                 <TileLayer
@@ -69,6 +93,8 @@ export const MapBox = (props: MapBoxProps) => {
                     <EditControl
                         position={"topleft"}
                         onCreated={onCreated}
+                        onEdited={onEdited}
+                        onDeleted={onDeleted}
                         draw={{
                             rectangle: false,
                             circle: false,
@@ -78,32 +104,20 @@ export const MapBox = (props: MapBoxProps) => {
                             polygon: true,
                         }}
                     />
-
-                    {Object.keys(geoJsonData).length && <GeoJSON data={geoJsonData} onEachFeature={(feature, layer) => {
-                        if (feature.properties && feature.properties.name) {
-                            layer.bindPopup(feature.properties.name);
-                        }
-                        }}/>
-                    }
-                    {Object.keys(intersectionData).length && <GeoJSON data={intersectionData} style={{color: "red"}} onEachFeature={(feature, layer) => {
-                        if (feature.properties && feature.properties.intersected_polygon_name) {
-                            layer.bindPopup(feature.properties.intersected_polygon_name);
-                        }
-                    }}/>
-                    }
                 </FeatureGroup>
-                <MapController />
+                {Object.keys(geoJsonData).length && <GeoJSON data={geoJsonData} onEachFeature={(feature, layer) => {
+                    if (feature.properties && feature.properties.name) {
+                        layer.bindPopup(feature.properties.name);
+                    }}}/>
+                }
+                {Object.keys(intersectionData).length && <GeoJSON data={intersectionData} style={{color: "red"}} onEachFeature={(feature, layer) => {
+                    if (feature.properties && feature.properties.intersected_polygon_name) {
+                        layer.bindPopup(feature.properties.intersected_polygon_name);
+                    }}}/>
+                }
             </MapContainer>
             <FigureModal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} onSubmit={addName}/>
         </div>
     );
 };
 
-const MapController = () => {
-    const map = useMap();
-    const center = useSelector(getMapCenter)
-    useEffect(() => {
-        map.setView(center, 6);
-    }, [center, map]);
-    return null;
-}

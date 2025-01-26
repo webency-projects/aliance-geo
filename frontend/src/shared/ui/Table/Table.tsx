@@ -16,7 +16,7 @@ export const Table = (props: TableProps) => {
     const {className, feature, headers} = props;
     const [isActive, setIsActive] = useState(false)
     const title = feature.properties?.name || feature.properties?.intersected_polygon_name || "";
-    const is_antimeridian = feature.properties.antimeridian || false;
+    const is_antimeridian = feature.properties?.antimeridian || false;
     const coordinates = feature.geometry.coordinates.flat() || [];
     return (
         <div className={classNames(cls.Table, {}, [className])}>

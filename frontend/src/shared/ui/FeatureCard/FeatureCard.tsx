@@ -3,10 +3,12 @@ import {classNames} from "shared/lib/classNames/classNames";
 import cls from './FeatureCard.module.scss';
 import {Button} from "shared/ui/Button/Button.tsx";
 import {Feature, Polygon} from "geojson";
+import {useSelector} from "react-redux";
+import {getMapIsLoading} from "widgets/MapBox/model/selectors/MapDataSelectors.ts";
 
 interface FeatureCardProps {
     className?: string;
-    feature: Feature<Polygon>;
+    feature?: Feature<Polygon>;
     onSave: () => void;
 }
 
@@ -16,6 +18,7 @@ export const FeatureCard = (props: FeatureCardProps) => {
         feature,
         onSave
     } = props;
+    const isLoading = useSelector(getMapIsLoading)
     if (!feature) {
         return (
             <div className={classNames(cls.FeatureCard, {}, [className])}>
@@ -48,7 +51,7 @@ export const FeatureCard = (props: FeatureCardProps) => {
                 </tbody>
             </table>
 
-            <Button onClick={onSave}>Сохранить</Button>
+            <Button onClick={onSave} disabled={isLoading}>Сохранить</Button>
         </div>
     );
 };

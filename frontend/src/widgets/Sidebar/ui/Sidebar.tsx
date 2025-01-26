@@ -20,6 +20,7 @@ export const Sidebar = memo((props: SidebarProps) => {
     const intersectionData = useSelector(getIntersectionData)
     const dispatch = useDispatch()
     const handleSave = () => {
+        // @ts-ignore
         dispatch(addMapData())
     }
     return (

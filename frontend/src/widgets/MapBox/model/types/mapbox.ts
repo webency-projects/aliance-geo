@@ -7,11 +7,11 @@ type searchData = {
 }
 
 export interface MapBoxSchema {
-    data: FeatureCollection;
-    intersections: FeatureCollection;
+    data: FeatureCollection<Polygon>;
+    intersections: FeatureCollection<Polygon>;
     isLoading: boolean;
     error?: string | undefined;
     feature?: Feature<Polygon>;
     searchData?: searchData[];
-    center: LatLngBoundsLiteral;
+    center: LatLngBoundsLiteral | null;
 }

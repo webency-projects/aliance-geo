@@ -2,18 +2,18 @@ import {createSlice} from "@reduxjs/toolkit";
 import {MapBoxSchema} from "../types/mapbox.ts";
 import {fetchMapData} from "../services/fetchMapData.ts";
 import {addMapData} from "widgets/MapBox/model/services/addMapData.ts";
-import {FeatureCollection} from "geojson";
+import {FeatureCollection, Polygon} from "geojson";
 import {fetchIntersectionData} from "widgets/MapBox/model/services/fetchIntersectionData.ts";
 
 
 const initialState: MapBoxSchema = {
     isLoading: false,
     error: undefined,
-    data: {} as FeatureCollection,
-    intersections: {} as FeatureCollection,
+    data: {} as FeatureCollection<Polygon>,
+    intersections: {} as FeatureCollection<Polygon>,
     feature: undefined,
     searchData: [],
-    center: [0, 0]
+    center: null
 }
 
 
@@ -24,11 +24,22 @@ export const MapBoxSlice = createSlice({
         setCurrentFeature: (state, action) => {
             state.feature = action.payload;
         },
+        editCurrentFeature: (state, action) => {
+            if (state.feature) {
+                const name = state.feature.properties?.name;
+                state.feature = {
+                    ...action.payload,
+                    properties: {name: name}
+                }
+            }
+        },
+        deleteCurrentFeature: (state) => {
+            state.feature = undefined;
+        },
         setPropertiesName: (state, action) => {
-            state.feature = {
-                ...state.feature,
-                properties: action.payload,
-            };
+            if (state.feature) {
+                state.feature.properties = action.payload;
+            }
         },
         setCenter: (state, action) => {
             state.center = action.payload;
@@ -43,11 +54,9 @@ export const MapBoxSlice = createSlice({
             .addCase(fetchMapData.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.data = action.payload;
+                // @ts-ignore
                 state.searchData = action.payload.features.reduce((acc, curr) => {
-                    const obj = {
-                        name: curr?.properties?.name,
-                        coords: curr.geometry.coordinates.flat()[0]
-                    }
+                    const obj = {name: curr?.properties?.name, coords: curr.geometry.coordinates.flat()}
                     return [...acc, obj];
                 },[])
             })

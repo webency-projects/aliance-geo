@@ -21,6 +21,7 @@ export const SearchBar = (props: SearchBarProps) => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (searchData?.length) {
+            // @ts-ignore
             const res = searchData.reduce((acc, curr) => {
                 const opt = {
                     value: curr.coords,
@@ -28,13 +29,14 @@ export const SearchBar = (props: SearchBarProps) => {
                 }
                 return [...acc, opt]
             }, []);
+            // @ts-ignore
             setResults(res)
         }
     }, [searchData]);
 
     useEffect(() => {
         if (selectedOption) {
-
+            // @ts-ignore
             dispatch(mapActions.setCenter(selectedOption.value))
         }
     }, [selectedOption, dispatch]);

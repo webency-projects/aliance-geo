@@ -21,10 +21,6 @@ class PolygonViewSet(viewsets.ModelViewSet):
 
         if not geometry:
             return Response({"error": "Geometry is required."}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            polygon = GEOSGeometry(json.dumps(geometry))
-        except Exception as e:
-            return Response({"error": "Geometry is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         KafkaProducer.send(request.data)
 
