@@ -1,8 +1,23 @@
 name: alliance-geo
 
 services:
+  geo_frontend:
+    container_name: geo_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=http://geo_backend_api:8000
+    ports:
+      - "3000:80"
+    depends_on:
+      - geo_backend_api
+    networks:
+      - geo-network
+
   geo_backend_api:
     container_name: geo_backend_api
+    restart: always
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -27,6 +42,7 @@ services:
 
   geo_kafka_consumer:
     container_name: geo_kafka_consumer
+    restart: always
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -50,6 +66,7 @@ services:
     build:
       context: ./coordinate_processor
       dockerfile: Dockerfile
+    restart: always
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
@@ -61,6 +78,7 @@ services:
   geo_redis:
     image: redis:latest
     container_name: geo-redis
+    restart: always
     ports:
       - "6379"
     networks:
@@ -94,7 +112,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=geo_db
     ports:
-      - "6666:5432"
+      - "5432"
     volumes:
       - geo_db-data:/var/lib/postgresql/data
     networks:
@@ -105,8 +123,23 @@ services:
       timeout: 5s
       retries: 5
 
+  geo_pgadmin:
+    container_name: geo_pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.ru
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - geo_pgadmin-data:/var/lib/pgadmin
+    networks:
+      - geo-network
+
+
   kafka:
     image: confluentinc/cp-kafka:latest
+    restart: always
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -129,6 +162,7 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -147,6 +181,7 @@ services:
 
 volumes:
   geo_db-data:
+  geo_pgadmin-data:
 
 networks:
   geo-network:
